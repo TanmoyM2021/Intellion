@@ -1,0 +1,50 @@
+---
+- name: Create site directory
+  win_file:
+    dest: C:\{{ apppool_directory_appname }}
+    state: directory
+
+- name: Create app directory
+  win_file:
+    dest: C:\{{ apppool_directory_appname }}\v17.0
+    state: directory
+
+- name: Create app pool
+  win_iis_webapppool:
+    name: {{ apppool_directory_appname }}
+
+- name: Create website
+  win_iis_website:
+    name: {{ webiste_name }}
+    application_pool: {{ apppool_directory_appname }}
+    port: {{ port }}
+    physical_path: C:\{{ apppool_directory_appname }}
+    state: started
+
+- name: Create web application
+  win_iis_webapplication:
+    name: v17.0
+    site: {{ webiste_name }}
+    physical_path: C:\{{ apppool_directory_appname }}\v17.0
+    state: absent
+
+- name: Copy folder contents recursively
+  ansible.windows.win_copy:
+    src: C:\ProgramData\Jenkins\.jenkins\workspace\DEV\Website\Website\
+    dest: C:\{{ apppool_directory_appname }}
+
+- name: Create Backup directory
+  win_file:
+    dest: {{ backup_directory }}
+    state: directory
+
+#- name: zip a directory
+#  win_zip:
+#    src: C:\{{ apppool_directory_appname }}
+#    dest: {{ backup_directory }}\{{ apppool_directory_appname }}-{{ BUILD_NUMBER }}.zip
+#    creates: C:\{{ apppool_directory_appname }}-{{ BUILD_NUMBER }}.zip
+
+- name: Compress the directories contents
+  community.windows.win_zip:
+    src: C:\{{ apppool_directory_appname }}\*
+    dest: '{{ backup_directory }}\{{ backup_directory }}-{{ BUILD_NUMBER }}.zip'

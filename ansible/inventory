@@ -1,0 +1,8 @@
+[webserver]
+184.105.3.13
+
+[webserver:vars]
+ansible_connection= winrm
+ansible_user=Umar
+ansible_password="Intelion2021@"
+ansible_winrm_server_cert_validation=ignore

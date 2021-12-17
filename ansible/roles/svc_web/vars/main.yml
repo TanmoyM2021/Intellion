@@ -1,0 +1,4 @@
+apppool_directory_appname: {{ ApplicationName }}
+port: {{ port }}
+webiste_name: {{ ApplicationName }}
+backup_directory: {{ backup_directory }}

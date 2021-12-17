@@ -1,0 +1,3 @@
+- hosts: "win2019_standard_web"
+  roles:
+    - svc_web
